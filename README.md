@@ -6,7 +6,7 @@ Career Prospect System(CPS) is a search engine to match a job or career with job
 1. Download this repository.
 
 2. Change the MySQL connection to your own MySQL scheme from app.py line 14 to 19.
-![image](https://user-images.githubusercontent.com/93475397/169473035-4315b394-f145-4948-a29a-97714109c7a5.png)
+![image](https://user-images.githubusercontent.com/93475397/169525877-40d5b286-4192-4a84-8285-7458ecdcb80e.png)
 
 3. Create database in MySQL. There are 6 databases that should be created, including job, candidate, publications_tab_2018, publications_tab_2019, publications_tab_2020, and publications_tab_2021. You can copy the code from the MySQL folder and paste it into your MySQL to create these databases. 
 
