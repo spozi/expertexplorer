@@ -1,14 +1,18 @@
-**Career-Prospect-System**
+Career-Prospect-System
 
 This web-based system is a search engine to match a job or career with job candidates by using job candidates's publications. A pretrained SciBERT model is used to obtain the job matching rate and average similarity between each job candidates and jobs by the users.
 
 
-**Installation**
+Installation
 1. Download this repository.
+
 2. Change the MySQL connection to your own MySQL scheme from app.py line 14 to 19.
 ![image](https://user-images.githubusercontent.com/93475397/169473035-4315b394-f145-4948-a29a-97714109c7a5.png)
+
 3. Create database in MySQL. There are 6 databases that should be created, including job, candidate, publications_tab_2018, publications_tab_2019, publications_tab_2020, and publications_tab_2021. You can copy the code from the MySQL folder and paste it into your MySQL to create these databases. 
+
 4. Import data into database. Only job databases need to import the excel file from MySQL.
+
 5. Import data from init_db.py. 
    * Import excel file 18.xlsx, 19.xlsx, 20.xlsx, and 21.xlsx.
    
@@ -28,6 +32,8 @@ This web-based system is a search engine to match a job or career with job candi
    ![image](https://user-images.githubusercontent.com/93475397/169509864-a0e9ea63-5e39-429e-bcf5-84ef9b028ea0.png)
    ![image](https://user-images.githubusercontent.com/93475397/169509945-978831d4-6b69-453d-9a48-88fc98611945.png)
    * Check and make sure the excel file is imported into the correct database.
+
+6. After all step had been done, you can run app.py to execute system.
 
 
 
