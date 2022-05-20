@@ -11,7 +11,8 @@ Installation
 
 3. Create database in MySQL. There are 6 databases that should be created, including job, candidate, publications_tab_2018, publications_tab_2019, publications_tab_2020, and publications_tab_2021. You can copy the code from the MySQL folder and paste it into your MySQL to create these databases. 
 
-4. Import data into database. Only job databases need to import the excel file from MySQL.
+4. Import data into database. Only job databases need to import the excel file from MySQL. 
+  Excel file(job): https://drive.google.com/file/d/10cQdtfhiWztbq4RQSOWQmy-me9DQ4WU6/view?usp=sharing
 
 5. Import data from init_db.py. 
    * Import excel file 18.xlsx, 19.xlsx, 20.xlsx, and 21.xlsx.
@@ -33,7 +34,7 @@ Installation
    ![image](https://user-images.githubusercontent.com/93475397/169509945-978831d4-6b69-453d-9a48-88fc98611945.png)
    * Check and make sure the excel file is imported into the correct database.
 
-6. After all step had been done, you can run app.py to execute system.
+6. After all step had been done, you can run app.py to execute the system.
 
 
 
