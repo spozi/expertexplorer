@@ -1,6 +1,6 @@
 # Career-Prospect-System
 
-This web-based system is a search engine to match a job or career with job candidates by using job candidates's publications. A pretrained SciBERT model is used to obtain the job matching rate and average similarity between each job candidates and jobs by the users.
+Career Prospect System(CPS) is a search engine to match a job or career with job candidates by using job candidates's publications. SciBERT model is used to obtain the job matching rate and average similarity between each job candidates and jobs by the users.
 
 ## Installation
 1. Download this repository.
