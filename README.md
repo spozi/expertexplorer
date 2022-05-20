@@ -1,9 +1,9 @@
-Career-Prospect-System
+#****Career-Prospect-System
 
 This web-based system is a search engine to match a job or career with job candidates by using job candidates's publications. A pretrained SciBERT model is used to obtain the job matching rate and average similarity between each job candidates and jobs by the users.
 
 
-Installation
+##****Installation
 1. Download this repository.
 
 2. Change the MySQL connection to your own MySQL scheme from app.py line 14 to 19.
