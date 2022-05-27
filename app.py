@@ -12,10 +12,10 @@ from scibert import SciBERT
 app = Flask(__name__)
 
 app.config['MYSQL_HOST'] = '127.0.0.1'
-app.config['MYSQL_USER'] = 'root'
-app.config['MYSQL_PASSWORD'] = 'root'
+app.config['MYSQL_USER'] = 'syafiq'
+app.config['MYSQL_PASSWORD'] = 'syafiq123'
 app.config['MYSQL_DB'] = 'publications_db'
-app.config['MYSQL_PORT'] = 3307
+app.config['MYSQL_PORT'] = 3306
 app.config['SECRET_KEY'] = 'something only you know'
 
 isMatched = False

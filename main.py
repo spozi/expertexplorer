@@ -253,6 +253,7 @@ def find(data, vector):
     df_agg.reset_index(inplace=True)
     df_agg.fillna(0, inplace=True)
     df_sorted = df_agg.sort_values(by=["mean", "std"], ascending=[False, True])
+    # df_sorted = df_agg.sort_values(by=["mean",], ascending=[False])
     return df_sorted.to_dict("records")
 
 

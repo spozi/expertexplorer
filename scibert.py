@@ -2,8 +2,13 @@ from transformers import AutoTokenizer, AutoModel
 import yake
 import re
 
-TOKENIZER = "allenai/scibert_scivocab_uncased"
+TOKENIZER = 'allenai/scibert_scivocab_uncased'
 MODEL = 'allenai/scibert_scivocab_uncased'
+
+# from transformers import *
+
+# TOKENIZER = AutoTokenizer.from_pretrained('allenai/scibert_scivocab_uncased')
+# MODEL = AutoModel.from_pretrained('allenai/scibert_scivocab_uncased')
 
 '''
 class SciBERT:
