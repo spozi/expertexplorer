@@ -25,7 +25,7 @@
           <div class="block">
             <form method="GET">
               <!--
-                <label for="entries">Select Threashold:</label>
+                <label for="entries">Select Threshold:</label>
                 <select id="entries" name="entries">
                     <option value="none" selected disabled hidden>
                         Select
@@ -47,7 +47,7 @@
                 <th>Photo</th>
                 <th>Expert</th>
                 <th>Matching Rate</th>
-                <th>Graph</th>
+                <!-- <th>Graph</th> -->
                 <th>Total Related Publications</th>
                 <th>Total Publications</th>
               </tr>
@@ -59,9 +59,9 @@
                                          alt="candidate image" width="200" height="250" ></td>
                 <td class="lalignc">{{ row[1] }}</td>
                 <td class="lalignc">{{ row[4] }}</td>
-                <td class="laligne"><img id="bigpic"
+                <!-- <td class="laligne"><img id="bigpic"
                                          src="{{ url_for('visualize', author = row[1], heights = row[5]) }}"
-                                         width="350" height="350"></td>
+                                         width="350" height="350"></td> -->
                 <td class="lalignc">{{ row[9] }}</td>
                 <td class="lalignc">{{ row[3] }}</td>
             </tr>

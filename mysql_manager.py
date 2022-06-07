@@ -52,7 +52,7 @@ class MySQLManager:
 
     
     def insert(self, obj):       
-        sttmt = "INSERT INTO publications_tab_2021(photo, author, university, vector) VALUES (%(photo)s, %(author)s, %(university)s, %(vector)s)"
+        sttmt = "INSERT INTO publications_tab_2020(photo, author, university, vector) VALUES (%(photo)s, %(author)s, %(university)s, %(vector)s)"
         cursor = self.cnx.cursor()
         cursor.execute(sttmt, obj)
         self.cnx.commit()

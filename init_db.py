@@ -4,7 +4,7 @@ from scibert import SciBERT
 import numpy as np
 
 
-EXCEL_FILENAMES = ["21.xlsx"] # use 4 files to create 4 tables in database
+EXCEL_FILENAMES = ["20-N.xlsx"] # use 4 files to create 4 tables in database
 
 def main():
     mysql = MySQLManager()

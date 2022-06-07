@@ -16,7 +16,7 @@ app.config['MYSQL_USER'] = 'syafiq'
 app.config['MYSQL_PASSWORD'] = 'syafiq123'
 app.config['MYSQL_DB'] = 'publications_db'
 app.config['MYSQL_PORT'] = 3306
-app.config['SECRET_KEY'] = 'something only you know'
+# app.config['SECRET_KEY'] = 'something only you know'
 
 isMatched = False
 global_id = "id"
@@ -64,15 +64,15 @@ def save_result(df, mean_image_list, var_image_list):
     for i in df.index:
         mean_tuple = (df["mean_2018"][i], df["mean_2019"][i], df["mean_2020"][i], df["mean_2021"][i])
         avg_mean = sum(mean_tuple) / len(mean_tuple)
-        avg_mean_list.append(avg_mean) # 1 average sim 
-        mean_list.append(mean_tuple) # 4 years average sim
+        avg_mean_list.append(avg_mean) 
+        mean_list.append(mean_tuple) 
         var_list.append((df["var_2018"][i], df["var_2019"][i], df["var_2020"][i], df["var_2021"][i]))
         docs_list.append(sum((df["docs_2018"][i], df["docs_2019"][i], df["docs_2020"][i], df["docs_2021"][i])))
-        related_list.append(sum((df["docs_2018"][i], df["r_2020"][i], df["r_2021"][i])))
+        related_list.append(sum((df["r_2018"][i], df["r_2020"][i], df["r_2021"][i])))
     df.drop(["mean_2018", "mean_2019", "mean_2020", "mean_2021"], axis=1, inplace=True)
     df.drop(["var_2018", "var_2019", "var_2020", "var_2021"], axis=1, inplace=True)
     df.drop(["docs_2018", "docs_2019", "docs_2020", "docs_2021"], axis=1, inplace=True)
-    df.drop(["r_2020", "r_2021"], axis=1, inplace=True)
+    df.drop(["r_2018", "r_2020", "r_2021"], axis=1, inplace=True)
     df.rename(columns={'photo': 'Photo'}, inplace=True)
     df.rename(columns={'author': 'Candidate'}, inplace=True)
     df["Average_Similarity"] = mean_list
@@ -261,20 +261,6 @@ def show1():
     conn = mysql.connection
     cursor = conn.cursor()
     
-    #######################################################################    
-    cursor.execute("SELECT CANDIDATE from candidate")
-    conn.commit()
-    user = cursor.fetchall()
-
-    cursor.execute("SELECT AVERAGE_SIMILARITY from candidate")
-    conn.commit()
-    avg_sim = cursor.fetchall()
-
-    cursor.execute("SELECT VARIANCE from candidate")
-    conn.commit()
-    variance = cursor.fetchall()
-
-    #######################################################################
     if request.method == "POST":
         query = request.form['query']
         if query != "":
@@ -298,76 +284,11 @@ def show1():
             #######################################################################
             pagination = Pagination(page=page, per_page=limit, offset=offset, total=total_count, record_name='user',
                                     css_framework='bootstrap3')
-            return render_template("searchpage.html", entries=entries, user=user, id=id, ts=ts,
+            return render_template("searchpage.html", entries=entries, id=id, ts=ts,
                                    dataa=dataa, pagination=pagination, message=message)
 
     if request.method == 'GET':
-        '''
-        entries = request.args.get('entries')
-        conn = mysql.connection
-        cursor = conn.cursor()
-
-        if entries == '5':
-            limit = 5
-
-        if entries == '10':
-            limit = 10
-
-        if entries == '25':
-            limit = 25
-
-        if entries == '50':
-            limit = 50
-
-        if entries == 'all':
-            limit = 323
-        '''
         message = ""
-        
-
-        ts = request.args.get('ts')
-        conn = mysql.connection
-        cursor = conn.cursor()
-
-        if  ts == '0.3':
-            cursor.execute("SELECT COUNT(*) FROM candidate WHERE  Avg_sim >= 0.3")
-            conn.commit()
-            total = cursor.fetchall()
-            total_count = total[0][0]
-            if total_count <= 0:
-                message = "All author’s average similarity lower than 0.3"
-
-        elif  ts == '0.4':
-            cursor.execute("SELECT COUNT(*) FROM candidate WHERE  Avg_sim >= 0.4")
-            conn.commit()
-            total = cursor.fetchall()
-            total_count = total[0][0]
-            if total_count <= 0:
-                message = "All author’s average similarity lower than 0.3"
-
-        elif  ts == '0.5':
-            cursor.execute("SELECT COUNT(*) FROM candidate WHERE  Avg_sim >= 0.5")
-            conn.commit()
-            total = cursor.fetchall()
-            total_count = total[0][0]
-            if total_count <= 0:
-                message = "All author’s average similarity lower than 0.3"
-
-        elif  ts == '0.6':
-            cursor.execute("SELECT COUNT(*) FROM candidate WHERE  Avg_sim >= 0.6")
-            conn.commit()
-            total = cursor.fetchall()
-            total_count = total[0][0]
-            if total_count <= 0:
-                message = "All author’s average similarity lower than 0.3"
-
-        elif  ts == '0.7':
-            cursor.execute("SELECT COUNT(*) FROM candidate WHERE  Avg_sim >= 0.7")
-            conn.commit()
-            total = cursor.fetchall()
-            total_count = total[0][0]
-            if total_count <= 0:
-                message = "All author’s average similarity lower than 0.3"
         
         cursor.execute("SELECT COUNT(*) FROM candidate WHERE  Avg_sim > 0.2")
         conn.commit()
@@ -387,7 +308,7 @@ def show1():
         #######################################################################
         pagination = Pagination(page=page, per_page=limit, offset=offset, total=total_count, record_name='user',
                                 css_framework='bootstrap3')
-        return render_template("searchpage.html", entries=entries, user=user, id=id, ts=ts,
+        return render_template("searchpage.html", entries=entries, id=id, ts=ts,
                                dataa=dataa, pagination=pagination, message=message)
 
 
