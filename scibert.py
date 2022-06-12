@@ -25,11 +25,20 @@ class SciBERT:
         self.tokenizer = AutoTokenizer.from_pretrained(TOKENIZER)
         self.model = AutoModel.from_pretrained(MODEL)
 
-    def vectorize(self, text):
+    def vectorizeWithYake(self, text):
         kw_extractor = yake.KeywordExtractor()
         keywords = kw_extractor.extract_keywords(text)
         x = re.sub('[^a-zA-Z]', '', str(keywords))
         inputs = self.tokenizer(str(x), return_tensors="pt")
+        outputs = self.model(**inputs)
+        outputs = outputs[0].mean(dim=0).mean(dim=0)
+        return outputs.detach().numpy()
+    
+    def vectorize(self, text):
+        # kw_extractor = yake.KeywordExtractor()
+        # keywords = kw_extractor.extract_keywords(text)
+        # x = re.sub('[^a-zA-Z]', '', str(keywords))
+        inputs = self.tokenizer(text, return_tensors="pt")
         outputs = self.model(**inputs)
         outputs = outputs[0].mean(dim=0).mean(dim=0)
         return outputs.detach().numpy()
