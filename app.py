@@ -10,6 +10,8 @@ from mysql_manager import MySQLManager
 from scibert import SciBERT
 import pandas as pd
 import numpy as np
+from scipy import spatial
+
 
 USER = "syafiq"
 PASSWORD = "syafiq123"
@@ -157,6 +159,9 @@ scibert = SciBERT()
 #         return render_template("searchpage.html", entries=entries, id=id, ts=ts,
 #                                dataa=dataa, pagination=pagination, message=message)
 
+def similarity(a, b):
+    return 1 - spatial.distance.cosine(a, b)
+
 @app.route('/expert', methods=['POST', 'GET'])
 def match():
     if request.method == "POST":
@@ -181,8 +186,10 @@ def match():
         #2a. Vectorize the query
         searchqueryvector = scibert.vectorizeWithYake(searchquery)
         for df in dfs:
-            df['numpy_vector'] = df['scibert_vector'].apply(lambda x: np.eval(x))
-
+            df['numpy_vector'] = df['scibert_vector'].apply(lambda x: np.fromstring(x[1:-1], sep=' '))
+            df['similarity'] = df.apply(lambda x: similarity(x['numpy_vector'],searchqueryvector), axis=1)
+            print(df['similarity'].head())
+    return render_template("searchpage.html") 
 
 
 if __name__ == "__main__":

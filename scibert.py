@@ -1,3 +1,5 @@
+from transformers import *
+
 from transformers import AutoTokenizer, AutoModel
 import yake
 import re
