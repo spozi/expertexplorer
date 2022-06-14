@@ -182,13 +182,19 @@ def match():
                 df = pd.DataFrame(query.fetchall())
                 dfs.append(df)
 
-        #2. Compute the similarity
-        #2a. Vectorize the query
-        searchqueryvector = scibert.vectorizeWithYake(searchquery)
+        #2. Vectorize the query and compute the similarity
+        searchqueryvector = scibert.vectorize(searchquery)
         for df in dfs:
             df['numpy_vector'] = df['scibert_vector'].apply(lambda x: np.fromstring(x[1:-1], sep=' '))
             df['similarity'] = df.apply(lambda x: similarity(x['numpy_vector'],searchqueryvector), axis=1)
-            print(df['similarity'].head())
+    
+        #3. Group into authors
+        # ['author, 'year', 'title', 'similarity']
+        author = []
+        for df in dfs:
+            
+
+
     return render_template("searchpage.html") 
 
 

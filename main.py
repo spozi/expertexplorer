@@ -10,6 +10,8 @@ from matplotlib.backends.backend_agg  import FigureCanvasAgg as FigureCanvas
 import seaborn as sns
 import io 
 import base64
+from sklearn.metrics.pairwise import cosine_similarity
+
 
 
 ############################################################################################ only use here
@@ -95,3 +97,6 @@ def find(data, vector):
 
 def similarity(a, b):
     return 1 - spatial.distance.cosine(a, b)
+
+# def similarity(a,b):
+#     return cosine_similarity(a,b)
