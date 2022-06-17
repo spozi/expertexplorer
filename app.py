@@ -1,3 +1,4 @@
+from filecmp import DEFAULT_IGNORES
 from flask import Flask, render_template, request, flash, send_file
 from flask_mysqldb import MySQL
 from flask_paginate import Pagination
@@ -204,36 +205,61 @@ def match():
             authors += df['Authors'].tolist()
         authors = list(set(authors))
 
+        #   print(authors)
         #b. Compute the authors yearly average similarity
-        df_year = {}
+        df_year_similarity = {}
         for df in dfs:
             year = df['Year'].values[0]
-            df_g = df.query('similarity > .6') #Similarity must higher than 0.7
+            df_g = df.query('similarity > .6') #Similarity must higher than 0.6
             df_g = df_g.filter(['Authors', 'similarity'])
-            df_g.groupby('Authors').mean()
-            df_year[year] = df_g
+            df_g = df_g.groupby('Authors')['similarity'].mean()
+            df_year_similarity[year] = df_g
+        
+        # print(df_year_similarity)
 
         #c. Count the related publications (count based on df_g $\in$ df_year)
         df_year_related_publications = {}
         for df in dfs:
             year = df['Year'].values[0]
-            df_g = df.query('similarity > .6') #Similarity must higher than 0.7
+            df_g = df.query('similarity > .6') #Similarity must higher than 0.6
             df_g = df_g.filter(['Authors', 'similarity'])
-            df_g.groupby(['Authors'])['Authors'].count()
+            df_g = df_g.groupby(['Authors']).count()
             df_year_related_publications[year] = df_g
         
-        for year in [2018,2019,2020,2021]:
-            print(year,df_year_related_publications[year].head(10))
+        # print(df_year_related_publications)
+        
+        # for year in [2018,2019,2020,2021]:
+        #     print(year,df_year_related_publications[year].head(10))
         
         #d. Count all publications
         df_year_all_publications = {}
         for df in dfs:
             year = df['Year'].values[0]
-            df_g = df_g.filter(['Authors', 'similarity'])
-            df_g.groupby(['Authors'])['Authors'].count()
+            # df_g = df_g.filter(['Authors'])
+            # df_g = df_g.groupby(['Authors'])['Authors'].count()
+            df_g = df['Authors'].value_counts() #Return a series
             df_year_all_publications[year] = df_g
+        print(df_year_all_publications)
         
         #e. Display the required information
+        # We are going to output ['photo','expert', 'matching rate', 'total related publications', 'total publications' ]
+        # Photo
+        # Expert
+        # Matching rate
+        # Total related publications
+        # authors = []
+        # for year, df in df_year_similarity.items():
+        #     cr_authors = df['Authors'].tolist()
+        #     authors = authors + cr_authors
+        # authors = list(set(authors))
+
+        # fields = ['expert', 'matching rate', 'total related publications', 'total publications']
+        # new_df = pd.DataFrame(columns=fields)
+
+
+             
+            
+            
 
     return render_template("searchpage.html") 
 
