@@ -189,11 +189,51 @@ def match():
             df['similarity'] = df.apply(lambda x: similarity(x['numpy_vector'],searchqueryvector), axis=1)
     
         #3. Group into authors
+        #  We are going to output ['photo','expert', 'matching rate', 'total related publications', 'total publications' ]
         # ['author, 'year', 'title', 'similarity']
-        author = []
-        for df in dfs:
-            
 
+        #1. Set the expertise threshold >= 0.8
+        #2. Compute the expertise yearly average similarity
+        #3. Matching rate = the sum of yearly average similarity / year
+        #4. Total related publications for whole time must be follow (1.)
+        #5. Total publications for whole time
+
+        #a. Get list of unique authors
+        authors = []
+        for df in dfs:
+            authors += df['Authors'].tolist()
+        authors = list(set(authors))
+
+        #b. Compute the authors yearly average similarity
+        df_year = {}
+        for df in dfs:
+            year = df['Year'].values[0]
+            df_g = df.query('similarity > .6') #Similarity must higher than 0.7
+            df_g = df_g.filter(['Authors', 'similarity'])
+            df_g.groupby('Authors').mean()
+            df_year[year] = df_g
+
+        #c. Count the related publications (count based on df_g $\in$ df_year)
+        df_year_related_publications = {}
+        for df in dfs:
+            year = df['Year'].values[0]
+            df_g = df.query('similarity > .6') #Similarity must higher than 0.7
+            df_g = df_g.filter(['Authors', 'similarity'])
+            df_g.groupby(['Authors'])['Authors'].count()
+            df_year_related_publications[year] = df_g
+        
+        for year in [2018,2019,2020,2021]:
+            print(year,df_year_related_publications[year].head(10))
+        
+        #d. Count all publications
+        df_year_all_publications = {}
+        for df in dfs:
+            year = df['Year'].values[0]
+            df_g = df_g.filter(['Authors', 'similarity'])
+            df_g.groupby(['Authors'])['Authors'].count()
+            df_year_all_publications[year] = df_g
+        
+        #e. Display the required information
 
     return render_template("searchpage.html") 
 
