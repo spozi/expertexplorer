@@ -215,47 +215,40 @@ def match():
 
         df_author_photo = df_author_photo.drop_duplicates('Authors')
         df_author_photo = df_author_photo.set_index('Authors')
-        print(df_author_photo)
-        print(len(df_author_photo))
+        # print(df_author_photo)
+        # print(len(df_author_photo))
 
         #   print(authors)
         #b. Compute the authors yearly average similarity
         df_year_similarity = {}
         for df in dfs:
             year = df['Year'].values[0]
-            df_g = df.query('similarity > .6') #Similarity must higher than 0.6
+            df_g = df.query('similarity > .5') #Similarity must higher than 0.6
             df_g = df_g.filter(['Authors', 'similarity'])
             df_g = df_g.groupby('Authors')['similarity'].mean()
             df_year_similarity[year] = df_g
-        
-        # print(df_year_similarity)
 
         #c. Count the related publications (count based on df_g $\in$ df_year)
         df_year_related_publications = {}
         for df in dfs:
             year = df['Year'].values[0]
-            df_g = df.query('similarity > .6') #Similarity must higher than 0.6
+            df_g = df.query('similarity > .5') #Similarity must higher than 0.6
             df_g = df_g.filter(['Authors'])
-            df_g = df_g.groupby(['Authors']).count()
+            df_g = df_g.groupby(['Authors'])['Authors'].count()
             df_year_related_publications[year] = df_g
-        
+        # print(df_year_related_publications)
         #d. Count all publications
         df_year_all_publications = {}
         for df in dfs:
             year = df['Year'].values[0]
-            # df_g = df_g.filter(['Authors'])
-            # df_g = df_g.groupby(['Authors'])['Authors'].count()
             df_g = df['Authors'].value_counts() #Return a series
             df_year_all_publications[year] = df_g
-
-        # print(df_year_all_publications)
         
         records = []
         for author in authors:
             author_record = [{"name":author}]
             for year, df in df_year_similarity.items():
                 if author in df:
-                    # print(df[author])
                     author_record.append({f"average_similarity_{year}":df[author]})
             for year, df in df_year_related_publications.items():
                 if author in df:
@@ -263,37 +256,29 @@ def match():
             for year, df in df_year_all_publications.items():
                 if author in df:
                     author_record.append({f"total_year_all_publications_{year}":df[author]})
-            # if author in df_author_photo['Author']:
+            # if author in df_author_photo.index:
+            #     print(author, ": True")
             #     author_record.append({"photo":df_author_photo[author]})
+            # else:
+            #     print(author, ": false")
+            # # else:
+            # #     author_record.append({"photo":df_author_photo[author]})
             result_author_record = reduce(lambda a, b: {**a, **b}, author_record)
             records.append(result_author_record)
         
         #Merge a list of dicts to single dicts
         df_output = pd.DataFrame(records)
         df_output.set_index('name', inplace=True)
-        # print(records)
-        #Convert records to dataframe
-        # df_output = pd.DataFrame.from_dict(records)
+
+        #Output dataframe to csv
         df_output.to_csv('sample.csv')
-        # jsonfiles = json.loads(df_output.to_json(orient='records'))
-        # print(jsonfiles)
-        # return render_template("searchpage.html", dataa=jsonfiles)
 
+        #Output dataframe to flask
+        data_dict = df_output.to_dict('index')
 
-        #e. Display the required information
-        # We are going to output ['photo','expert', 'matching rate', 'total related publications', 'total publications' ]
-        # Photo
-        # Expert
-        # Matching rate
-        # Total related publications
-        # authors = []
-        # for year, df in df_year_similarity.items():
-        #     cr_authors = df['Authors'].tolist()
-        #     authors = authors + cr_authors
-        # authors = list(set(authors))
+        return render_template("searchpage.html", output_data = data_dict)
+        
 
-        # fields = ['expert', 'matching rate', 'total related publications', 'total publications']
-        # new_df = pd.DataFrame(columns=fields)
     return render_template("searchpage.html") 
 
 

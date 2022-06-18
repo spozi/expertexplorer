@@ -45,22 +45,20 @@
             <thead>
               <tr>
                 <th>Photo</th>
-                <th>Expert</th>
+                <th>Expert Name</th>
                 <th>Matching Rate</th>
                 <!-- <th>Graph</th> -->
-                <th>Total Related Publications</th>
-                <th>Total Publications</th>
+                <!-- <th>Total Related Publications</th> -->
+                <!-- <th>Total Publications</th> -->
               </tr>
             </thead>
-            {% for row in dataa %}
+            {% for k,v in output_data.items() %}
             <tr>
-                <td class="laligne"><img id="bigpic"
-                                         src="{{ row['Photo'] }}" 
-                                         alt="candidate image" width="200" height="250" ></td>
-                <td class="lalignc">{{ row['Authors'] }}</td>
-                <td class="lalignc">{{ row['similarity'] }}</td>
-                <td class="lalignc">{{ row[similarity] }}</td>
-                <td class="lalignc">{{ row[similarity] }}</td>
+              <td class="laligne"><img id="bigpic" src="{{ v['photo'] }}"
+                alt="candidate image" width="200" height="250" >
+              </td>
+              <td class="lalignc">{{ k }}</td> 
+              <td class="lalignc">{{ v }}</td>
             </tr>
           {% endfor %}
           </table>
