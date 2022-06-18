@@ -1,19 +1,9 @@
-# from filecmp import DEFAULT_IGNORES
-from flask import Flask, render_template, request, flash, send_file
-# from flask_mysqldb import MySQL
-# from flask_paginate import Pagination
+from flask import Flask, render_template, request
 from main import match_job
-# import matplotlib.pyplot as plt
-# from matplotlib.backends.backend_agg import FigureCanvasAgg as FigureCanvas
-# import seaborn as sns
-# import io
-# from mysql_manager import MySQLManager
 from scibert import SciBERT
 import pandas as pd
 import numpy as np
 from scipy import spatial
-# import json
-# from itertools import chain
 from functools import reduce
 from collections import OrderedDict
 
@@ -43,6 +33,7 @@ app.config['MYSQL_PORT'] = PORT
 
 scibert = SciBERT()
 
+threshold = 0.55
 def similarity(a, b):
     return 1 - spatial.distance.cosine(a, b)
 
@@ -73,7 +64,7 @@ def match():
             df['similarity'] = df.apply(lambda x: similarity(x['numpy_vector'],searchqueryvector), axis=1)
     
         #3. Group into authors
-        #  We are going to output ['photo','expert', 'matching rate', 'total related publications', 'total publications' ]
+        #  We are going to output ['photo','expert', 'expert score', 'total related publications', 'total publications' ]
         # ['author, 'year', 'title', 'similarity']
 
         #1. Set the expertise threshold >= 0.6
@@ -102,7 +93,7 @@ def match():
         df_year_similarity = {}
         for df in dfs:
             year = df['Year'].values[0]
-            df_g = df.query('similarity > .5') #Similarity must higher than 0.6
+            df_g = df.query(f"similarity > {threshold}") #Similarity must higher than 0.6
             df_g = df_g.filter(['Authors', 'similarity'])
             df_g = df_g.groupby('Authors')['similarity'].mean()
             df_year_similarity[year] = df_g
@@ -111,18 +102,27 @@ def match():
         df_year_related_publications = {}
         for df in dfs:
             year = df['Year'].values[0]
-            df_g = df.query('similarity > .5') #Similarity must higher than 0.6
+            df_g = df.query(f"similarity > {threshold}") #Similarity must higher than 0.6
             df_g = df_g.filter(['Authors'])
             df_g = df_g.groupby(['Authors'])['Authors'].count()
             df_year_related_publications[year] = df_g
-        # print(df_year_related_publications)
-        #d. Count all publications
+
+        #d. Store the related publications title
+        df_year_related_titles_publications = {}
+        for df in dfs:
+            year = df['Year'].values[0]
+            df_g = df.query(f"similarity > {threshold}") #Similarity must higher than 0.6
+            df_g = df_g.filter(['Authors', 'Title'])
+            df_g = df_g.groupby('Authors')['Title'].apply(list)
+            df_year_related_titles_publications[year] = df_g
+
+        #e. Count all publications
         df_year_all_publications = {}
         for df in dfs:
             year = df['Year'].values[0]
             df_g = df['Authors'].value_counts() #Return a series
             df_year_all_publications[year] = df_g
-        
+
         records = []
         for author in authors:
             author_record = [{"name":author}]
@@ -135,6 +135,9 @@ def match():
             for year, df in df_year_all_publications.items():
                 if author in df:
                     author_record.append({f"total_year_all_publications_{year}":df[author]})
+            for year, df in df_year_related_titles_publications.items():
+                if author in df:
+                    author_record.append({f"title_publications_{year}":df[author]})
             if author in author_photo_dict:
                 author_record.append(author_photo_dict[author])
             result_author_record = reduce(lambda a, b: {**a, **b}, author_record)
@@ -143,10 +146,44 @@ def match():
         #Merge a list of dicts to single dicts
         df_output = pd.DataFrame(records)
         df_output = df_output.fillna(0)
+        if "average_similarity_2018" not in df_output:
+            df_output["average_similarity_2018"] = 0
+        if "average_similarity_2019" not in df_output:
+            df_output["average_similarity_2019"] = 0
+        if "average_similarity_2020" not in df_output:
+            df_output["average_similarity_2020"] = 0
+        if "average_similarity_2021" not in df_output:
+            df_output["average_similarity_2021"] = 0
         df_output['Similarity_Score'] = df_output['average_similarity_2018'] + df_output['average_similarity_2019'] + df_output['average_similarity_2020'] + df_output['average_similarity_2021']
+        
+        if "total_related_publications_2018" not in df_output:
+            df_output["total_related_publications_2018"] = 0
+        if "total_related_publications_2019" not in df_output:
+            df_output["total_related_publications_2019"] = 0
+        if "total_related_publications_2020" not in df_output:
+            df_output["total_related_publications_2020"] = 0
+        if "total_related_publications_2021" not in df_output:
+            df_output["total_related_publications_2021"] = 0
         df_output['Total_Related_Publications'] = df_output['total_related_publications_2018'] + df_output['total_related_publications_2019'] + df_output['total_related_publications_2020'] + df_output['total_related_publications_2021']
+        
         df_output['Total_Publications'] = df_output['total_year_all_publications_2018'] + df_output['total_year_all_publications_2019'] + df_output['total_year_all_publications_2020'] + df_output['total_year_all_publications_2021']
         
+        if "title_publications_2018" not in df_output:
+            df_output["title_publications_2018"] = 0
+        if "title_publications_2019" not in df_output:
+            df_output["title_publications_2019"] = 0
+        if "title_publications_2020" not in df_output:
+            df_output["title_publications_2020"] = 0
+        if "title_publications_2021" not in df_output:
+            df_output["title_publications_2021"] = 0
+        
+        df_output['title_publications_2018'] = df_output['title_publications_2018'].apply(lambda x: [] if x == 0 else x)
+        df_output['title_publications_2019'] = df_output['title_publications_2019'].apply(lambda x: [] if x == 0 else x)
+        df_output['title_publications_2020'] = df_output['title_publications_2020'].apply(lambda x: [] if x == 0 else x)
+        df_output['title_publications_2021'] = df_output['title_publications_2021'].apply(lambda x: [] if x == 0 else x)
+
+        df_output['Related_Publications'] = df_output['title_publications_2018'] + df_output['title_publications_2019'] + df_output['title_publications_2020'] + df_output['title_publications_2021']    
+
         #change some of the columns datatype to int
         df_output = df_output.astype({"Total_Related_Publications": int}, errors='raise') 
         df_output = df_output.astype({"Total_Publications": int}, errors='raise') 
@@ -160,10 +197,8 @@ def match():
 
         #Output dataframe to flask
         data_dict = df_output.to_dict(orient='index', into=OrderedDict)
-        return render_template("searchpage.html", output_data = data_dict)
-        
-
-    return render_template("searchpage.html") 
+        return render_template("searchpage.html", output_data=data_dict)
+    return render_template("searchpage.html", output_data={}) 
 
 
 if __name__ == "__main__":

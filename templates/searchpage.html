@@ -50,19 +50,27 @@
                 <!-- <th>Graph</th> -->
                 <th>Total Related Publications</th>
                 <th>Total Publications</th>
+                <th>Related Publications</th>
               </tr>
             </thead>
-            {% for k,v in output_data.items() %}
-            <tr>
-              <td class="laligne"><img id="bigpic" src="{{ v['Photos'] }}"
-                alt="candidate image" width="100" height="100" >
-              </td>
-              <td class="lalignc">{{ k }}</td> 
-              <td class="lalignc">{{ v['Similarity_Score'] }}</td> 
-              <td class="lalignc">{{ v['Total_Related_Publications'] }}</td>
-              <td class="lalignc">{{ v['Total_Publications'] }}</td>
-            </tr>
-          {% endfor %}
+              {% for k,v in output_data.items() %}
+              <tr>
+                <td class="laligne"><img id="bigpic" src="{{ v['Photos'] }}"
+                  alt="candidate image" width="100" height="100" >
+                </td>
+                <td class="lalignc">{{ k }}</td> 
+                <td class="lalignc">{{ v['Similarity_Score'] }}</td> 
+                <td class="lalignc">{{ v['Total_Related_Publications'] }}</td>
+                <td class="lalignc">{{ v['Total_Publications'] }}</td>
+                <td class="lalignc">
+                  {% for t in v['Related_Publications'] %}
+                  <ul>
+                    <li>{{t}}</li>
+                  </ul>
+                  {% endfor %}
+                </td>
+              </tr>
+              {% endfor %}
           </table>
         </div>
       </div>
