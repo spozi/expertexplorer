@@ -222,7 +222,8 @@ def match():
         for df in dfs:
             year = df['Year'].values[0]
             df_g = df.query('similarity > .6') #Similarity must higher than 0.6
-            df_g = df_g.filter(['Authors', 'similarity'])
+            # df_g = df_g.filter(['Authors', 'similarity'])
+            df_g = df_g.filter(['Authors'])
             df_g = df_g.groupby(['Authors']).count()
             df_year_related_publications[year] = df_g
         
@@ -239,8 +240,25 @@ def match():
             # df_g = df_g.groupby(['Authors'])['Authors'].count()
             df_g = df['Authors'].value_counts() #Return a series
             df_year_all_publications[year] = df_g
-        print(df_year_all_publications)
+
+        # print(df_year_all_publications)
         
+        records = []
+        for author in authors:
+            author_record = [{"name":author}]
+            for year, df in df_year_similarity.items():
+                if author in df:
+                    # print(df[author])
+                    author_record.append({f"average_similarity_{year}":df[author]})
+            for year, df in df_year_related_publications.items():
+                if author in df:
+                    author_record.append({f"total_related_publications_{year}":df[author]})
+            for year, df in df_year_all_publications.items():
+                if author in df:
+                    author_record.append({f"total_year_all_publications_{year}":df[author]})
+            records.append(author_record)
+        
+        print(records)
         #e. Display the required information
         # We are going to output ['photo','expert', 'matching rate', 'total related publications', 'total publications' ]
         # Photo
