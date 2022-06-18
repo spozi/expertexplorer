@@ -57,7 +57,7 @@ class SciBERT:
         sentence_embeddings = self.model_sentence.encode(sentences)
 
         #3. Compute the average embedding vector
-        mean_embedding = sentence_embeddings.mean(0)
+        mean_embedding = sentence_embeddings.mean(0) #This is in numpy
 
         #4. Output the average embedding vector
         return mean_embedding

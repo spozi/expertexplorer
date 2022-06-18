@@ -12,6 +12,9 @@ from scibert import SciBERT
 import pandas as pd
 import numpy as np
 from scipy import spatial
+import json
+from itertools import chain
+from functools import reduce
 
 
 USER = "syafiq"
@@ -193,7 +196,7 @@ def match():
         #  We are going to output ['photo','expert', 'matching rate', 'total related publications', 'total publications' ]
         # ['author, 'year', 'title', 'similarity']
 
-        #1. Set the expertise threshold >= 0.8
+        #1. Set the expertise threshold >= 0.6
         #2. Compute the expertise yearly average similarity
         #3. Matching rate = the sum of yearly average similarity / year
         #4. Total related publications for whole time must be follow (1.)
@@ -201,9 +204,19 @@ def match():
 
         #a. Get list of unique authors
         authors = []
+        photos = []
         for df in dfs:
             authors += df['Authors'].tolist()
-        authors = list(set(authors))
+            photos += df['Photo'].tolist()   
+        #Create a new dataframe author photo  
+        df_author_photo = pd.DataFrame({'Authors': authors,
+                   'Photos': photos})
+        authors = list(set(authors)) #Extract unique authors
+
+        df_author_photo = df_author_photo.drop_duplicates('Authors')
+        df_author_photo = df_author_photo.set_index('Authors')
+        print(df_author_photo)
+        print(len(df_author_photo))
 
         #   print(authors)
         #b. Compute the authors yearly average similarity
@@ -222,15 +235,9 @@ def match():
         for df in dfs:
             year = df['Year'].values[0]
             df_g = df.query('similarity > .6') #Similarity must higher than 0.6
-            # df_g = df_g.filter(['Authors', 'similarity'])
             df_g = df_g.filter(['Authors'])
             df_g = df_g.groupby(['Authors']).count()
             df_year_related_publications[year] = df_g
-        
-        # print(df_year_related_publications)
-        
-        # for year in [2018,2019,2020,2021]:
-        #     print(year,df_year_related_publications[year].head(10))
         
         #d. Count all publications
         df_year_all_publications = {}
@@ -256,9 +263,23 @@ def match():
             for year, df in df_year_all_publications.items():
                 if author in df:
                     author_record.append({f"total_year_all_publications_{year}":df[author]})
-            records.append(author_record)
+            # if author in df_author_photo['Author']:
+            #     author_record.append({"photo":df_author_photo[author]})
+            result_author_record = reduce(lambda a, b: {**a, **b}, author_record)
+            records.append(result_author_record)
         
-        print(records)
+        #Merge a list of dicts to single dicts
+        df_output = pd.DataFrame(records)
+        df_output.set_index('name', inplace=True)
+        # print(records)
+        #Convert records to dataframe
+        # df_output = pd.DataFrame.from_dict(records)
+        df_output.to_csv('sample.csv')
+        # jsonfiles = json.loads(df_output.to_json(orient='records'))
+        # print(jsonfiles)
+        # return render_template("searchpage.html", dataa=jsonfiles)
+
+
         #e. Display the required information
         # We are going to output ['photo','expert', 'matching rate', 'total related publications', 'total publications' ]
         # Photo
@@ -273,12 +294,6 @@ def match():
 
         # fields = ['expert', 'matching rate', 'total related publications', 'total publications']
         # new_df = pd.DataFrame(columns=fields)
-
-
-             
-            
-            
-
     return render_template("searchpage.html") 
 
 

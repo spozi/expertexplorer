@@ -55,15 +55,12 @@
             {% for row in dataa %}
             <tr>
                 <td class="laligne"><img id="bigpic"
-                                         src="{{ row[0] }}" 
+                                         src="{{ row['Photo'] }}" 
                                          alt="candidate image" width="200" height="250" ></td>
-                <td class="lalignc">{{ row[1] }}</td>
-                <td class="lalignc">{{ row[4] }}</td>
-                <!-- <td class="laligne"><img id="bigpic"
-                                         src="{{ url_for('visualize', author = row[1], heights = row[5]) }}"
-                                         width="350" height="350"></td> -->
-                <td class="lalignc">{{ row[9] }}</td>
-                <td class="lalignc">{{ row[3] }}</td>
+                <td class="lalignc">{{ row['Authors'] }}</td>
+                <td class="lalignc">{{ row['similarity'] }}</td>
+                <td class="lalignc">{{ row[similarity] }}</td>
+                <td class="lalignc">{{ row[similarity] }}</td>
             </tr>
           {% endfor %}
           </table>
