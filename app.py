@@ -1,12 +1,10 @@
 from flask import Flask, render_template, request
-from main import match_job
 from scibert import SciBERT
 import pandas as pd
 import numpy as np
 from scipy import spatial
 from functools import reduce
 from collections import OrderedDict
-
 
 
 USER = "syafiq"
@@ -33,7 +31,7 @@ app.config['MYSQL_PORT'] = PORT
 
 scibert = SciBERT()
 
-threshold = 0.55
+threshold = 0.65
 def similarity(a, b):
     return 1 - spatial.distance.cosine(a, b)
 
@@ -144,6 +142,7 @@ def match():
             records.append(result_author_record)
         
         #Merge a list of dicts to single dicts
+        #The following codes should be refactored
         df_output = pd.DataFrame(records)
         df_output = df_output.fillna(0)
         if "average_similarity_2018" not in df_output:

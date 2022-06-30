@@ -1,7 +1,6 @@
 from scibert import SciBERT
 import numpy as np
 import pandas as pd
-import MySQLdb
 
 USER = "syafiq"
 PASSWORD = "syafiq123"
