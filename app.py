@@ -35,7 +35,7 @@ threshold = 0.65
 def similarity(a, b):
     return 1 - spatial.distance.cosine(a, b)
 
-@app.route('/expert', methods=['POST', 'GET'])
+@app.route('/', methods=['POST', 'GET'])
 def match():
     if request.method == "POST":
         searchquery = request.form['query']
