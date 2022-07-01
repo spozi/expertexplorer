@@ -7,10 +7,10 @@ from functools import reduce
 from collections import OrderedDict
 
 
-USER = "syafiq"
-PASSWORD = "syafiq123"
+USER = "root"
+PASSWORD = "mysqlpw"
 HOST = "127.0.0.1"
-PORT = '3306'
+PORT = '55000'
 DATABASE = "publications_db"
 
 from sqlalchemy import create_engine

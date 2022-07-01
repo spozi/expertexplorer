@@ -7,6 +7,7 @@ RUN apt-get update && \
     apt-get install -y default-libmysqlclient-dev && \
     apt-get install -y wget && \
     apt-get install -y build-essential && \
+    apt-get install -y libstdc++6 && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 
@@ -23,7 +24,13 @@ WORKDIR /app
 COPY environment.yml .
 RUN conda env create -f environment.yml
 
+# Make RUN commands use the new environment:
+SHELL ["conda", "run", "-n", "expertfinder", "/bin/bash", "-c"]
+
+# Demonstrate the environment is activated:
+RUN echo "Make sure flask is installed:"
+RUN python -c "import flask"
+
 # The code to run when container is started:
 COPY . .
-CMD [ "python3", "-m" , "flask", "run", "--host=0.0.0.0"]
-# ENTRYPOINT ["./entrypoint.sh"]
+ENTRYPOINT ["conda", "run", "--no-capture-output", "-n", "expertfinder", "python", "app.py"]
