@@ -15,31 +15,14 @@
           <form action="" method="POST">
             <div class="form-group">
               <label>Query</label>
-              <input type="text" class="form-control" id="query" name="query" placeholder="Enter job description here" />
+              <input type="text" class="form-control" id="query" name="query" placeholder="Enter your query here" />
+              <label>Threshold</label>
+              <input type="text" class="form-control" id="threshold" name="threshold" placeholder="0.7" />
             </div>
             <br/>
 
             <button id="submit" type="submit" class="btn btn-primary">Search</button>
           </form>
-
-          <div class="block">
-            <form method="GET">
-              <!--
-                <label for="entries">Select Threshold:</label>
-                <select id="entries" name="entries">
-                    <option value="none" selected disabled hidden>
-                        Select
-                    </option>
-                    <option value="0.3">0.3</option>
-                    <option value="0.4">0.4</option>
-                    <option value="0.5">0.5</option>
-                    <option value="0.6">0.6</option>
-                    <option value="0.7">0.7</option>
-                </select>
-                <input type="submit" value="Submit" style="color: white;background-color: #295185;">
-                -->
-            </form>
-        </div>
 
           <table class="table">
             <thead>

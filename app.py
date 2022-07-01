@@ -31,7 +31,6 @@ app.config['MYSQL_PORT'] = PORT
 
 scibert = SciBERT()
 
-threshold = 0.65
 def similarity(a, b):
     return 1 - spatial.distance.cosine(a, b)
 
@@ -39,6 +38,7 @@ def similarity(a, b):
 def match():
     if request.method == "POST":
         searchquery = request.form['query']
+        threshold = request.form['threshold']
 
         #1. Get all data from each table
         sql = [
