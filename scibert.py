@@ -2,8 +2,8 @@ from transformers import *
 from sentence_transformers import SentenceTransformer
 
 from transformers import AutoTokenizer, AutoModel
-import yake
-import re
+# import yake
+# import re
 import nltk.data
 
 import nltk
@@ -39,14 +39,14 @@ class SciBERT:
         self.model = AutoModel.from_pretrained(MODEL)
         self.model_sentence = SentenceTransformer(MODEL) #We are just going to use this
 
-    def vectorizeWithYake(self, text):
-        kw_extractor = yake.KeywordExtractor()
-        keywords = kw_extractor.extract_keywords(text)
-        x = re.sub('[^a-zA-Z]', '', str(keywords))
-        inputs = self.tokenizer(str(x), return_tensors="pt")
-        outputs = self.model(**inputs)
-        outputs = outputs[0].mean(dim=0).mean(dim=0)
-        return outputs.detach().numpy()
+    # def vectorizeWithYake(self, text):
+    #     kw_extractor = yake.KeywordExtractor()
+    #     keywords = kw_extractor.extract_keywords(text)
+    #     x = re.sub('[^a-zA-Z]', '', str(keywords))
+    #     inputs = self.tokenizer(str(x), return_tensors="pt")
+    #     outputs = self.model(**inputs)
+    #     outputs = outputs[0].mean(dim=0).mean(dim=0)
+    #     return outputs.detach().numpy()
     
     def vectorize(self, text):
         #Hugging face is cool        
