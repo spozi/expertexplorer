@@ -25,6 +25,7 @@ dependencies:
   - gmp=6.2.1
   - gnutls=3.7.6
   - greenlet=1.1.2
+  - gunicorn=20.1.0
   - huggingface_hub=0.8.1
   - icu=70.1
   - idna=3.3

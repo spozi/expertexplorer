@@ -10,7 +10,9 @@ from collections import OrderedDict
 USER = "root"
 PASSWORD = "mysqlpw"
 HOST = "127.0.0.1"
+# HOST = "172.18.0.2"
 PORT = '55000'
+# PORT = '3306'
 DATABASE = "publications_db"
 
 from sqlalchemy import create_engine
@@ -203,4 +205,4 @@ def match():
 if __name__ == "__main__":
     app.jinja_env.auto_reload = True
     app.config["TEMPLATES_AUTO_RELOAD"] = True
-    app.run(debug=True)
+    app.run(debug=True, host='0.0.0.0')
