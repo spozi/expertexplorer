@@ -1,6 +1,7 @@
 name: expertfinder-production
 channels:
   - conda-forge
+  - defaults
 dependencies:
   - aom=3.4.0
   - boto3=1.24.20
@@ -39,11 +40,9 @@ dependencies:
   - lerc=3.0
   - libblas=3.9.0
   - libcblas=3.9.0
-  - libcxx=14.0.6
+  - libcxx
   - libdeflate=1.12
   - libffi=3.4.2
-  - libgfortran=5.0.0.dev0
-  - libgfortran5=11.0.1.dev0
   - libiconv=1.16
   - libidn2=2.3.2
   - liblapack=3.9.0
@@ -84,7 +83,7 @@ dependencies:
   - python=3.9.13
   - python-dateutil=2.8.2
   - python_abi=3.9
-  - pytorch=1.11.0
+  - pytorch
   - pytz=2022.1
   - pyyaml=6.0
   - readline=8.1.2
@@ -105,7 +104,7 @@ dependencies:
   - threadpoolctl=3.1.0
   - tk=8.6.12
   - tokenizers=0.12.1
-  - torchvision=0.12.0
+  - torchvision
   - tqdm=4.64.0
   - transformers=4.19.4
   - typing-extensions=4.2.0
