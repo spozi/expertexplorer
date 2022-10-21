@@ -40,12 +40,21 @@ def match():
         searchquery = request.form['query']
         threshold = request.form['threshold']
 
+        #Add more years here
         #1. Get all data from each table
+        # sql = [
+        #     "SELECT * FROM publications_2018;",
+        #     "SELECT * FROM publications_2019;",
+        #     "SELECT * FROM publications_2020;",
+        #     "SELECT * FROM publications_2021;"
+        # ]
+
         sql = [
-            "SELECT * FROM publications_2018;",
-            "SELECT * FROM publications_2019;",
-            "SELECT * FROM publications_2020;",
-            "SELECT * FROM publications_2021;"
+            "SELECT * FROM publications_msap_2018;",
+            "SELECT * FROM publications_msap_2019;",
+            "SELECT * FROM publications_msap_2020;",
+            "SELECT * FROM publications_msap_2021;",
+            "SELECT * FROM publications_msap_2022;"
         ]
 
         dfs = []
@@ -67,7 +76,7 @@ def match():
 
         #1. Set the expertise threshold >= 0.6
         #2. Compute the expertise yearly average similarity
-        #3. Matching rate = the sum of yearly average similarity / year
+        #3. Matching rate = the sum of yearly average similarity / total year
         #4. Total related publications for whole time must be follow (1.)
         #5. Total publications for whole time
 
@@ -145,6 +154,8 @@ def match():
         #The following codes should be refactored
         df_output = pd.DataFrame(records)
         df_output = df_output.fillna(0)
+        
+        #Add more years here
         if "average_similarity_2018" not in df_output:
             df_output["average_similarity_2018"] = 0
         if "average_similarity_2019" not in df_output:
@@ -154,7 +165,23 @@ def match():
         if "average_similarity_2021" not in df_output:
             df_output["average_similarity_2021"] = 0
         df_output['Similarity_Score'] = df_output['average_similarity_2018'] + df_output['average_similarity_2019'] + df_output['average_similarity_2020'] + df_output['average_similarity_2021']
-        
+        # df_output['Similarity_Score'] /= 4 #What happen? I divide by 4 years
+
+        #Graph 1, semantic similarity trend
+        #Add more years here
+        df_output['year_2018'] = 2018
+        df_output['year_2019'] = 2019
+        df_output['year_2020'] = 2020
+        df_output['year_2021'] = 2021
+
+        # df_output['df_2018_sim'] = dict(zip(df_output['year_2018'], df_output['average_similarity_2018']))  
+        # df_output['df_2019_sim'] = dict(zip(df_output['year_2019'], df_output['average_similarity_2019']))  
+        # df_output['df_2020_sim'] = dict(zip(df_output['year_2020'], df_output['average_similarity_2020']))
+        # df_output['df_2021_sim'] = dict(zip(df_output['year_2021'], df_output['average_similarity_2021'])) 
+
+        # df_output['Graph_1'] = list(zip(df_output['df_2018_sim'],df_output['df_2019_sim'],df_output['df_2020_sim'],df_output['df_2021_sim']))
+
+        #Add more years here
         if "total_related_publications_2018" not in df_output:
             df_output["total_related_publications_2018"] = 0
         if "total_related_publications_2019" not in df_output:
@@ -167,6 +194,7 @@ def match():
         
         df_output['Total_Publications'] = df_output['total_year_all_publications_2018'] + df_output['total_year_all_publications_2019'] + df_output['total_year_all_publications_2020'] + df_output['total_year_all_publications_2021']
         
+        #Add more years here
         if "title_publications_2018" not in df_output:
             df_output["title_publications_2018"] = 0
         if "title_publications_2019" not in df_output:
@@ -176,11 +204,13 @@ def match():
         if "title_publications_2021" not in df_output:
             df_output["title_publications_2021"] = 0
         
+        #Add more years here
         df_output['title_publications_2018'] = df_output['title_publications_2018'].apply(lambda x: [] if x == 0 else x)
         df_output['title_publications_2019'] = df_output['title_publications_2019'].apply(lambda x: [] if x == 0 else x)
         df_output['title_publications_2020'] = df_output['title_publications_2020'].apply(lambda x: [] if x == 0 else x)
         df_output['title_publications_2021'] = df_output['title_publications_2021'].apply(lambda x: [] if x == 0 else x)
 
+        #Add more years here
         df_output['Related_Publications'] = df_output['title_publications_2018'] + df_output['title_publications_2019'] + df_output['title_publications_2020'] + df_output['title_publications_2021']    
 
         #change some of the columns datatype to int
@@ -189,7 +219,8 @@ def match():
 
         
         df_output = df_output.set_index('name')
-        df_output = df_output.sort_values(by='Similarity_Score', ascending=False)
+        # df_output = df_output.sort_values(by='Similarity_Score', ascending=False)
+        df_output = df_output.sort_values(by='Related_Publications', ascending=False)
 
         #Output dataframe to csv
         df_output.to_csv('sample.csv')
