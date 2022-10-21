@@ -88,14 +88,14 @@
       <thead>
         <tr>
           <th>No</th>
-          <th>Photo</th>
+          <!-- <th>Photo</th> -->
           <th>Expert Name</th>
           <!-- <th>Expertise Score</th> -->
           <!-- <th>Graph</th> -->
           <th>Total Related Publications</th>
           <th>Total Publications</th>
           <th>Related Publications</th>
-          <th>Semantic Trend</th>
+          <!-- <th>Semantic Trend</th> -->
         </tr>
       </thead>
 
@@ -103,7 +103,7 @@
       {% if (v['Similarity_Score'] > 0) %}
       <tr>
         <td>{{loop.index0 +1 }}</td>
-        <td class="laligne"><img id="bigpic" src="{{ v['Photos'] }}" alt="candidate image" width="100" height="100">
+        <!-- <td class="laligne"><img id="bigpic" src="{{ v['Photos'] }}" alt="candidate image" width="100" height="100"> -->
         </td>
         <td class="lalignc">{{ k }}</td>
         <!-- <td class="lalignc">{{'%.2f'|format(v['Similarity_Score']|float) }}</td> -->
@@ -135,7 +135,7 @@
             </div>
           </div>
         </div>
-        <td class="lalignc">
+        <!-- <td class="lalignc">
           {% set gaid = "ga" + (loop.index0 +1)|string %}
           <canvas id='{{ gaid }}' width="300" height="300"></canvas>
           <script>
@@ -144,11 +144,11 @@
             var lineChart = new Chart(ctx, {
               type: "line",
               data: {
-                labels: ['2018', '2019', '2020', '2021'],
+                labels: ['2018', '2019', '2020', '2021', '2022'],
                 datasets: [
                   {
                     label: "Average semantic value",
-                    data: ['{{v["average_similarity_2018"]}}', '{{v["average_similarity_2019"]}}', '{{v["average_similarity_2020"]}}', '{{v["average_similarity_2021"]}}'],
+                    data: ['{{v["average_similarity_2018"]}}', '{{v["average_similarity_2019"]}}', '{{v["average_similarity_2020"]}}', '{{v["average_similarity_2021"]}}', '{{v["average_similarity_2022"]}}'],
                     // borderColor: 'red',
                     pointStyle: 'circle',
                     pointRadius: 10,
@@ -161,7 +161,7 @@
               }
             });
         </script>
-        </td>
+        </td> -->
       </tr>
       {% endif %}
       {% endfor %}

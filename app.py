@@ -62,6 +62,7 @@ def match():
             for cmd in sql:
                 query = conn.execute(text(cmd))
                 df = pd.DataFrame(query.fetchall())
+                print(len(df))
                 dfs.append(df)
 
         #2. Vectorize the query and compute the similarity
@@ -85,11 +86,13 @@ def match():
         photos = []
         for df in dfs:
             authors += df['Authors'].tolist()
-            photos += df['Photo'].tolist()   
+            # photos += df['Photo'].tolist()   
         
         #Create a new dataframe author photo  
-        df_author_photo = pd.DataFrame({'Authors': authors,
-                   'Photos': photos})
+        df_author_photo = pd.DataFrame({
+            'Authors': authors,
+            # 'Photos': photos
+        })
         authors = list(set(authors)) #Extract unique authors
 
         df_author_photo = df_author_photo.drop_duplicates('Authors')
@@ -164,7 +167,9 @@ def match():
             df_output["average_similarity_2020"] = 0
         if "average_similarity_2021" not in df_output:
             df_output["average_similarity_2021"] = 0
-        df_output['Similarity_Score'] = df_output['average_similarity_2018'] + df_output['average_similarity_2019'] + df_output['average_similarity_2020'] + df_output['average_similarity_2021']
+        if "average_similarity_2022" not in df_output:
+            df_output["average_similarity_2022"] = 0
+        df_output['Similarity_Score'] = df_output['average_similarity_2018'] + df_output['average_similarity_2019'] + df_output['average_similarity_2020'] + df_output['average_similarity_2021'] + df_output['average_similarity_2022']
         # df_output['Similarity_Score'] /= 4 #What happen? I divide by 4 years
 
         #Graph 1, semantic similarity trend
@@ -173,6 +178,7 @@ def match():
         df_output['year_2019'] = 2019
         df_output['year_2020'] = 2020
         df_output['year_2021'] = 2021
+        df_output['year_2022'] = 2022 #add 2022 for msap
 
         # df_output['df_2018_sim'] = dict(zip(df_output['year_2018'], df_output['average_similarity_2018']))  
         # df_output['df_2019_sim'] = dict(zip(df_output['year_2019'], df_output['average_similarity_2019']))  
@@ -190,9 +196,10 @@ def match():
             df_output["total_related_publications_2020"] = 0
         if "total_related_publications_2021" not in df_output:
             df_output["total_related_publications_2021"] = 0
-        df_output['Total_Related_Publications'] = df_output['total_related_publications_2018'] + df_output['total_related_publications_2019'] + df_output['total_related_publications_2020'] + df_output['total_related_publications_2021']
-        
-        df_output['Total_Publications'] = df_output['total_year_all_publications_2018'] + df_output['total_year_all_publications_2019'] + df_output['total_year_all_publications_2020'] + df_output['total_year_all_publications_2021']
+        if "total_related_publications_2022" not in df_output:
+            df_output["total_related_publications_2022"] = 0
+        df_output['Total_Related_Publications'] = df_output['total_related_publications_2018'] + df_output['total_related_publications_2019'] + df_output['total_related_publications_2020'] + df_output['total_related_publications_2021'] + df_output['total_related_publications_2022']
+        df_output['Total_Publications'] = df_output['total_year_all_publications_2018'] + df_output['total_year_all_publications_2019'] + df_output['total_year_all_publications_2020'] + df_output['total_year_all_publications_2021'] + df_output['total_year_all_publications_2022']
         
         #Add more years here
         if "title_publications_2018" not in df_output:
@@ -203,15 +210,18 @@ def match():
             df_output["title_publications_2020"] = 0
         if "title_publications_2021" not in df_output:
             df_output["title_publications_2021"] = 0
+        if "title_publications_2022" not in df_output:
+            df_output["title_publications_2022"] = 0
         
         #Add more years here
         df_output['title_publications_2018'] = df_output['title_publications_2018'].apply(lambda x: [] if x == 0 else x)
         df_output['title_publications_2019'] = df_output['title_publications_2019'].apply(lambda x: [] if x == 0 else x)
         df_output['title_publications_2020'] = df_output['title_publications_2020'].apply(lambda x: [] if x == 0 else x)
         df_output['title_publications_2021'] = df_output['title_publications_2021'].apply(lambda x: [] if x == 0 else x)
+        df_output['title_publications_2022'] = df_output['title_publications_2022'].apply(lambda x: [] if x == 0 else x)
 
         #Add more years here
-        df_output['Related_Publications'] = df_output['title_publications_2018'] + df_output['title_publications_2019'] + df_output['title_publications_2020'] + df_output['title_publications_2021']    
+        df_output['Related_Publications'] = df_output['title_publications_2018'] + df_output['title_publications_2019'] + df_output['title_publications_2020'] + df_output['title_publications_2021'] + df_output['title_publications_2022'] 
 
         #change some of the columns datatype to int
         df_output = df_output.astype({"Total_Related_Publications": int}, errors='raise') 
